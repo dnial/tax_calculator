@@ -1,7 +1,7 @@
 import pytest
 
-from tax_calculator.calculator.models import Codes, Items, Users
-from tax_calculator.calculator.tests import utils
+from calculator.models import Codes, Items, Users
+from calculator.tests import utils
 
 
 pytestmark = pytest.mark.django_db

@@ -1,21 +1,8 @@
-from tax_calculator.calculator.models import Codes, Items, Users
-
-
-def create_user(name=""):
-    user = Users(name=name)
-    user.save()
-    return user
-
-
-def create_item(user=None, name="", code=None, price=None):        
-    code = Codes.objects.get(id=code)
-
-    item = Items(code=code, user=user, name=name, price=price)
-    item.save()
-    return item
+from calculator.models import Codes, Items, Users
+from calculator.services import item as item_services
 
 def calculate_bills(user=None):
-    items = Items.objects.filter(user=user)
+    items = item_services.get_items_by_user(user=user)
     bills = []
     price_subtotal = 0
     tax_subtotal = 0
