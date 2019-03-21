@@ -24,13 +24,18 @@ class User(APIView):
 
         data = request.GET
         user_id = data.get('id', None)
-        user_data = user.get_user(user_id=user_id)
+        try:
+            user_data = user.get_user(user_id=user_id)
+        except ObjectDoesNotExist:
+            error = {"message": "User Id {} Not Found".format(user_id)}
+            return Response(data=error, status=status.HTTP_404_NOT_FOUND)
+
         data = {
             "id": user_data.id,
             "name": user_data.name
         }
 
-        return JsonResponse(data=data, status=status.HTTP_200_OK)
+        return Response(data=data, status=status.HTTP_200_OK)
 
     def post(self, request):
         """
