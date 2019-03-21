@@ -5,7 +5,7 @@ def create_user(name=""):
     user.save()
     return user
 
-def get_user(id=None):
-    user = Users.objects.get(id=code)
+def get_user(user_id=None):
+    user = Users.objects.get(id=user_id)
     return user
 
