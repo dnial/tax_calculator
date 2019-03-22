@@ -35,8 +35,8 @@ CACHES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(ROOT_DIR, 'calculator.db'),
-        # 'NAME': ':memory:',
+        # 'NAME': os.path.join(ROOT_DIR, 'calculator.db'),
+        'NAME': ':memory:',
     }
 }
 
