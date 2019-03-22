@@ -10,6 +10,7 @@ from calculator.tests import utils
 
 pytestmark = pytest.mark.django_db
 
+
 class TestUserView:
     def tearDown(self):
         utils.clear_all()
