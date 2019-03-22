@@ -2,8 +2,7 @@ import sys
 import traceback
 import uuid
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
 from django.forms.models import model_to_dict
 
@@ -36,6 +35,10 @@ class User(APIView):
         except ObjectDoesNotExist:
             error = {"message": "User Id {} Not Found".format(user_id)}
             return Response(data=error, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            error = {"message": "Internal Server Error"}
+            return Response(data=error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
         data = {
             "id": user_data.id,
@@ -62,7 +65,12 @@ class User(APIView):
         data = request.data
         name = data.get("name", None)
 
-        new_user = user.create_user(name=name)
+        try:
+            new_user = user.create_user(name=name)
+        except Exception as ex:
+            error = {"message": "Internal Server Error"}
+            return Response(data=error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         data = {
             "id": new_user.id,
             "name": new_user.name
@@ -95,6 +103,10 @@ class Bill(APIView):
         except ObjectDoesNotExist:
             error = {"message": "Bill with Id {} Not Found".format(item_id)}
             return Response(data=error, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            error = {"message": "Internal Server Error"}
+            return Response(data=error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
         data = {
             "id": item_data.id,
@@ -121,7 +133,14 @@ class Bill(APIView):
         """
 
         data = request.data
-        item_data = item.create_item(data)
+        try:
+            item_data = item.create_item(data)
+        except ObjectDoesNotExist as oe:
+            error = {"message": str(oe)}
+            return Response(data=error, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            error = {"message": "Internal Server Error"}
+            return Response(data=error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         data = {
             "id": item_data.id,
@@ -146,6 +165,13 @@ class Bills(APIView):
         data = request.GET
         user_id = data.get('user_id', None)
 
-        data = bill.calculate_bills(user_id=user_id)
+        try:
+            data = bill.calculate_bills(user_id=user_id)
+        except ObjectDoesNotExist as oe:
+            error = {"message": str(oe)}
+            return Response(data=error, status=status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            error = {"message": "Internal Server Error"}
+            return Response(data=error, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(data=data, status=status.HTTP_200_OK)
