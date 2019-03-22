@@ -1,10 +1,17 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from calculator.models import Codes, Items, Users
 from calculator.services import item as item_services
 from calculator.services import user as user_services
 
 
 def calculate_bills(user_id=None):
-    user_data = user_services.get_user(user_id=user_id)
+
+    try:
+        user_data = user_services.get_user(user_id=user_id)
+    except ObjectDoesNotExist:
+        raise ObjectDoesNotExist("User Id {} not found".format(user_id))
+
     items = item_services.get_items_by_user(user=user_data)
     bills = []
     price_subtotal = 0

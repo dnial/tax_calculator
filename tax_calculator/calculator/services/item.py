@@ -1,3 +1,6 @@
+from django.core.exceptions import ObjectDoesNotExist
+
+from calculator.services import user as user_services
 from calculator.models import Codes, Items, Users
 
 
@@ -7,8 +10,15 @@ def create_item(data=None):
     code = data.get("tax_code", None)
     price = data.get("price", None)
 
-    code = Codes.objects.get(id=code)
-    user = Users.objects.get(id=user_id)
+    try:
+        code = Codes.objects.get(id=code)
+    except ObjectDoesNotExist:
+        raise ObjectDoesNotExist("Tax Code {} not found".format(code))
+
+    try:
+        user = user_services.get_user(user_id=user_id)
+    except ObjectDoesNotExist:
+        raise ObjectDoesNotExist("User Id {} not found".format(user_id))
 
     item = Items(code=code, user=user, name=name, price=price)
     item.save()
