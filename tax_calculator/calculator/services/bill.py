@@ -28,7 +28,9 @@ def calculate_bills(user_id=None):
             "price": item.price,
             "price_txt": "{:.2f}".format(item.price),
             "tax": tax,
-            "amount": amount
+            "tax_txt": "{:.2f}".format(tax),
+            "amount": amount,
+            "amount_txt": "{:.2f}".format(amount),
         }
         price_subtotal += item.price
         tax_subtotal += tax

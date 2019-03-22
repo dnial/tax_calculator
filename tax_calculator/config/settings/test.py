@@ -5,10 +5,15 @@ With these settings, tests run faster.
 from .base import *  # noqa
 from .base import env
 
+import os
+
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = False
+DEBUG = True
+
+ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1"]
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env(
     "DJANGO_SECRET_KEY",
@@ -30,7 +35,8 @@ CACHES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
+        'NAME': os.path.join(ROOT_DIR, 'calculator.db'),
+        # 'NAME': ':memory:',
     }
 }
 
